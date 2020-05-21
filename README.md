@@ -275,10 +275,11 @@ const ADD_TODO = "ADD_TODO";
 const DELETE_TODO = "DELETE_TODO";
 
 // 절대로 MUTATE STATE를 하면 안 된다.
+// 새로운 STATE를 리턴해야 한다.
 const reducer = (state = [], action) => {
   switch (action.type) {
     case ADD_TODO:
-      return [];
+      return ];
     case DELETE_TODO:
       return [];
     default:
@@ -298,4 +299,51 @@ const onSubmit = e => {
 };
 
 form.addEventListener("submit", onSubmit);
+```
+
+https://redux.js.org/introduction/three-principles
+
+리덕스의 강점은 데이터를 한 곳에 모아 관리할 수 있다는 점
+
+그리고 state를 수정하지 않고 대체하는 것이다. 새로운 state를 리턴하는 것.
+
+```js
+import { createStore } from "redux";
+
+const form = document.querySelector("form");
+const input = document.querySelector("input");
+const ul = document.querySelector("ul");
+
+const ADD_TODO = "ADD_TODO";
+const DELETE_TODO = "DELETE_TODO";
+
+// 절대로 MUTATE STATE를 하면 안 된다.
+const reducer = (state = [], action) => {
+  switch (action.type) {
+    case ADD_TODO:
+      // push() 등으로 state를 수정하지 않는다.
+      // 이전 state 값을 유지하면서 새로운 state를 만들어 return
+      return [...state, { text: action.text, id: Date.now() }];
+    case DELETE_TODO:
+      return [];
+    default:
+      return state;
+  }
+};
+
+const store = createStore(reducer);
+
+store.subscribe(() => console.log(store.getState()));
+
+const onSubmit = e => {
+  e.preventDefault();
+  const text = input.value;
+  input.value = "";
+  // dispatch로 reducer 실행
+  // action의 다른 프로퍼티로 input의 value를 reducer로 전달
+  store.dispatch({ type: ADD_TODO, text });
+};
+
+form.addEventListener("submit", onSubmit);
+
 ```

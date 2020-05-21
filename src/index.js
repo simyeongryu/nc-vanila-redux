@@ -1,5 +1,9 @@
 import { createStore } from "redux";
 
+const form = document.querySelector("form");
+const input = document.querySelector("input");
+const ul = document.querySelector("ul");
+
 const ADD_TODO = "ADD_TODO";
 const DELETE_TODO = "DELETE_TODO";
 
@@ -7,7 +11,9 @@ const DELETE_TODO = "DELETE_TODO";
 const reducer = (state = [], action) => {
   switch (action.type) {
     case ADD_TODO:
-      return [];
+      // push() 등으로 state를 수정하지 않는다.
+      // 이전 state 값을 유지하면서 새로운 state를 만들어 return
+      return [...state, { text: action.text, id: Date.now() }];
     case DELETE_TODO:
       return [];
     default:
@@ -16,6 +22,8 @@ const reducer = (state = [], action) => {
 };
 
 const store = createStore(reducer);
+
+store.subscribe(() => console.log(store.getState()));
 
 const onSubmit = e => {
   e.preventDefault();
