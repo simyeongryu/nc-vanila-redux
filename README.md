@@ -1,6 +1,6 @@
 # Vanila Redux
 
-# 1.0 Vanila Counter
+## 1.0 Vanila Counter
 
 간단한 숫자 Counter를 바닐라 스크립트로 만든다.
 
@@ -41,7 +41,7 @@ plus.addEventListener("click", handlePlus);
 minus.addEventListener("click", handleMinus);
 ```
 
-# 1.1
+## 1.1
 
 ```
 $ yarn add redux
@@ -79,8 +79,6 @@ console.log(countStore.getState());
 ```js
 import { createStore } from "redux";
 
-
-
 const plus = document.querySelector("#plus");
 const minus = document.querySelector("#minus");
 const number = document.querySelector("span");
@@ -98,7 +96,7 @@ const countStore = createStore(countModifier);
 
 ```
 
-# 1.2 
+## 1.2 
 
 store.dispatch(action) 으로 reducer와 소통한다.
 
@@ -139,6 +137,7 @@ countStore.dispatch({ type: "ADD" });
 console.log(countStore.getState());
 ```
 
+## 1.3
 ```js
 import { createStore } from "redux";
 
@@ -168,15 +167,61 @@ const countStore = createStore(countModifier);
 const onChange = () => {
   number.innerText = countStore.getState();
 };
-// countStore.subscribe() 는 store안의 state가 변화하면 실행한다.
+// countStore.subscribe() 는 store안의 state가 변화하면 실행되고 args를 실행.
 countStore.subscribe(onChange);
-
+// action 객체는 type 프로퍼티가 반드시 필요하다.
 plus.addEventListener("click", () => {
   countStore.dispatch({ type: "ADD" });
 });
 
 minus.addEventListener("click", () => {
   countStore.dispatch({ type: "MINUS" });
+});
+
+```
+## 1.4
+switch문, action 변수화
+
+```js
+import { createStore } from "redux";
+
+const plus = document.querySelector("#plus");
+const minus = document.querySelector("#minus");
+const number = document.querySelector("span");
+
+number.innerText = 0;
+
+// action.type을 변수로 지정하면 디버깅하기 쉽다.
+// 만약 오타를 내면 변수 에러가 뜨기 때문
+const ADD = "ADD";
+const MINUS = "MINUS";
+
+// reducer는 switch를 쓰면 좀더 가독성이 좋다.
+const countModifier = (count = 0, action) => {
+  switch (action.type) {
+    case ADD:
+      return count + 1;
+    case MINUS:
+      return count - 1;
+    default:
+      return count;
+  }
+};
+
+const countStore = createStore(countModifier);
+
+const onChange = () => {
+  number.innerText = countStore.getState();
+};
+
+countStore.subscribe(onChange);
+
+plus.addEventListener("click", () => {
+  countStore.dispatch({ type: ADD });
+});
+
+minus.addEventListener("click", () => {
+  countStore.dispatch({ type: MINUS });
 });
 
 ```
