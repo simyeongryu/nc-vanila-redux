@@ -225,3 +225,77 @@ minus.addEventListener("click", () => {
 });
 
 ```
+
+## 2.0
+
+바닐라 스크립트로 짠 todo 리스트
+
+index.html
+
+```html
+<body>
+    <h1>TO DO</h1>
+    <form>
+      <input type="text" placeholder="write to do" />
+      <button>ADD</button>
+      <ul></ul>
+    </form>
+  </body>
+```
+
+index.js
+
+```js
+const form = document.querySelector("form");
+const input = document.querySelector("input");
+const ul = document.querySelector("ul");
+
+const createToDo = toDo => {
+  const li = document.createElement("li");
+  li.innerText = toDo;
+  ul.appendChild(li);
+};
+
+const onSubmit = e => {
+  e.preventDefault();
+  const toDo = input.value;
+  input.value = "";
+  createToDo(toDo);
+};
+
+form.addEventListener("submit", onSubmit);
+```
+
+하지만 이건 단순히 HTML을 변경시킬 뿐이어서 새로고침 등을 하면 다 사라진다.
+
+```js
+import { createStore } from "redux";
+
+const ADD_TODO = "ADD_TODO";
+const DELETE_TODO = "DELETE_TODO";
+
+// 절대로 MUTATE STATE를 하면 안 된다.
+const reducer = (state = [], action) => {
+  switch (action.type) {
+    case ADD_TODO:
+      return [];
+    case DELETE_TODO:
+      return [];
+    default:
+      return state;
+  }
+};
+
+const store = createStore(reducer);
+
+const onSubmit = e => {
+  e.preventDefault();
+  const text = input.value;
+  input.value = "";
+  // dispatch로 reducer 실행
+  // action의 다른 프로퍼티로 input의 value를 reducer로 전달
+  store.dispatch({ type: ADD_TODO, text });
+};
+
+form.addEventListener("submit", onSubmit);
+```
