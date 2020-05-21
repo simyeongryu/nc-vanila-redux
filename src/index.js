@@ -22,13 +22,17 @@ const countModifier = (count = 0, action) => {
 };
 // createStore는 store를 만든다.
 const countStore = createStore(countModifier);
-// action 은 dispatch() 안에 있는 args를 action으로 reducer를 호출한다.
-// dispatch로 reducer를 부른다.
-countStore.dispatch({ type: "MINUS" });
-countStore.dispatch({ type: "MINUS" });
-countStore.dispatch({ type: "MINUS" });
-countStore.dispatch({ type: "MINUS" });
-countStore.dispatch({ type: "MINUS" });
-countStore.dispatch({ type: "ADD" });
+// countStore.getState()는 store 내 현재 state를 조회한다.
+const onChange = () => {
+  number.innerText = countStore.getState();
+};
+// countStore.subscribe() 는 store안의 state가 변화하면 실행한다.
+countStore.subscribe(onChange);
 
-console.log(countStore.getState());
+plus.addEventListener("click", () => {
+  countStore.dispatch({ type: "ADD" });
+});
+
+minus.addEventListener("click", () => {
+  countStore.dispatch({ type: "MINUS" });
+});
