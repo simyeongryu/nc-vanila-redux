@@ -21,7 +21,8 @@ const reducer = (state = [], action) => {
       // 새로운 state를 만들기 때문에 순서 등을 수정할 수 있다.
       return [...state, { id: Date.now(), text: action.text }];
     case DELETE_TODO:
-      return [];
+      // action id 가 아닌 todo를 갖는 새로운 state 리턴
+      return state.filter(toDo => toDo.id !== action.id);
     default:
       return state;
   }
@@ -30,7 +31,8 @@ const reducer = (state = [], action) => {
 const store = createStore(reducer);
 
 const dispatchDeleteToDo = e => {
-  const id = e.target.parentNode.id;
+  // HTML에서 얻는 id는 string
+  const id = Number(e.target.parentNode.id);
   store.dispatch(deleteToDo(id));
 };
 
